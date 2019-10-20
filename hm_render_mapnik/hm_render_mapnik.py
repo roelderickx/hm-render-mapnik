@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# hikingmap -- render maps on paper using data from OpenStreetMap
+# hm-render-mapnik -- render maps on paper using data from OpenStreetMap
 # Copyright (C) 2019  Roel Derickx <roel.derickx AT gmail>
 
 # This program is free software: you can redistribute it and/or modify
@@ -53,7 +53,8 @@ def parse_commandline():
     # --
     parser.add_argument('gpxfiles', nargs = '*')
     
-    subparsers = parser.add_subparsers(dest='mode', help='bounding box or center mode')
+    subparsers = parser.add_subparsers(dest='mode', required=True, \
+                                       help='bounding box or center mode')
     
     # create the parser for the bbox command
     parser_bbox = subparsers.add_parser('bbox', help='define bounding box')
