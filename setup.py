@@ -8,10 +8,10 @@ with open('requirements.txt', 'r', encoding='utf-8') as f:
 
 setuptools.setup(
     name="hm-render-mapnik",
-    version="0.0.1",
+    version="0.0.2",
     license='GNU General Public License (GNU GPL v3 or above)',
     author="Roel Derickx",
-    author_email="roel.derickx AT gmail",
+    author_email="hikingmap.pypi@derickx.be",
     description="Render a map for a given area to paper using mapnik",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -23,9 +23,12 @@ setuptools.setup(
         'console_scripts': ['hm-render-mapnik = hm_render_mapnik.hm_render_mapnik:main']
     },
     classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: GNU General Public License (GPL)",
-        "Operating System :: OS Independent",
+        'Environment :: Console',
+        'Topic :: Scientific/Engineering :: GIS',
+        'Development Status :: 5 - Production/Stable',
+        'Programming Language :: Python :: 3',
+        'License :: OSI Approved :: GNU General Public License (GPL)',
+        'Operating System :: OS Independent',
     ],
 )
 

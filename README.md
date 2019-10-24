@@ -1,4 +1,4 @@
-# Render paper maps from Openstreetmap data using mapnik.
+# Render paper maps from Openstreetmap data using mapnik
 
 This program renders an area with given boundaries using data from Openstreetmap. It is designed to work with hikingmap but it can be used standalone as well if desired.
 
@@ -27,7 +27,7 @@ Options:
 | `-S, --scale-factor` | Scale factor, default 1.0
 | `-m, --mapstyle` | Mapnik stylesheet file, default mapnik_style.xml
 | `--hikingmapstyle` | Hikingmap stylesheet file, contains the CartoCSS for the tracks and the waypoints. The default is hikingmapstyle.xml, see the repository for an example.
-| `-f, --format` | Output format. Consult the mapnik documentation for possible values, default png
+| `-f, --format` | Output format. Consult the [mapnik documentation](http://mapnik.org/docs/v2.2.0/api/python/mapnik._mapnik-module.html#render_to_file) for possible values, default png
 | `gpxfiles` | The GPX track(s) to render.
 
 After these parameters you are required to make a choice between bbox and center. In bbox mode the rendered area will be a defined bounding box and in center mode you can specify a center coordinate and a scale.
@@ -51,6 +51,37 @@ Options for center mode:
 | `--lat` | Latitude of the center of the page
 | `--scale` | Scale denominator, default 50000
 
+## Configuration file
+
+Because most of the time you will want to use the same parameters, you can optionally override the defaults in a configuration file. hm-render-mapnik will search for a file hm-render-mapnik.config.xml in the current directory, if not found it will resort to ~/.hm-render-mapnik.config.xml
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<hm-render-mapnik>
+    <mapstyle>mapnik_style.xml</mapstyle>
+    <hikingmapstyle>hikingmap_style.xml</hikingmapstyle>
+    <outputformat>pdf</outputformat>
+    <dpi>300</dpi>
+    <scalefactor>1.0</scalefactor>
+    <fontdirs>
+        <fontdir>/usr/share/fonts/noto</fontdir>
+        <fontdir>/usr/share/fonts/noto-cjk</fontdir>
+        <fontdir>/usr/share/fonts/TTF</fontdir>
+    </fontdirs>
+</hm-render-mapnik>
+```
+
+Options:
+
+| Tag | Description
+| --- | -----------
+| mapstyle | Mapnik stylesheet file, contains the style to draw the map.
+| hikingmapstyle | Hikingmap stylesheet file, contains the CartoCSS for the tracks and the waypoints, see the repository for an example.
+| outputformat | Output format. Consult the [mapnik documentation](http://mapnik.org/docs/v2.2.0/api/python/mapnik._mapnik-module.html#render_to_file) for possible values.
+| dpi | Amount of detail to render in dots per inch. This value is unrelated to the setting on your printer, a higher value will simply result in smaller icons, thinner roads and unreadable text.
+| scalefactor | The scale factor to compensate for a higher dpi value.
+| fontdirs | Optional. Can contain one or more fontdir subtags with additional font directories to be used by mapnik.
+
 ## Prerequisites
 
 To run this script you should have a working installation of [python 3](https://www.python.org/) and [mapnik](http://mapnik.org/). Make sure you also have [python-mapnik](https://github.com/mapnik/python-mapnik/) installed.
@@ -58,8 +89,4 @@ To run this script you should have a working installation of [python 3](https://
 ## Configuration of the mapnik stylesheet
 
 The mapnik stylesheet should be configured before use and you need to set up a datasource as well. Consult the HTML documentation in this repository for a detailed explanation on how to achieve this.
-
-## TODO
-
-Since most of the time the same configuration and tile source will be used, the program should be able to read these parameters from a config file.
 

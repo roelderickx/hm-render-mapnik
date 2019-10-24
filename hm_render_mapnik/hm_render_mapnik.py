@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import argparse, math, mapnik
+import os, argparse, math, mapnik
 from xml.dom import minidom
 
 # global constants
@@ -24,7 +24,79 @@ earthCircumference = 40041.44 # km (average, equatorial 40075.017 km / meridiona
 cmToKmFactor = 100000.0
 inch = 2.54 # cm
 
+def search_configfile():
+    filename = 'hm-render-mapnik.config.xml'
+    if os.path.exists(filename):
+        return os.path.abspath(filename)
+    elif os.path.exists(os.path.join(os.path.expanduser('~'), '.' + filename)):
+        return os.path.join(os.path.expanduser('~'), '.' + filename)
+    else:
+        return None
+
+
+def get_xml_subtag_value(xmlnode, sublabelname):
+    elements = xmlnode.getElementsByTagName(sublabelname)
+    return str(elements[0].firstChild.nodeValue) if elements and elements[0].childNodes else None
+
+
+def parse_configfile():
+    config = {}
+    config['mapstyle'] = 'mapnik_style.xml'
+    config['hikingmapstyle'] = 'hikingmap_style.xml'
+    config['output_format'] = 'png'
+    config['dpi'] = 300
+    config['scale_factor'] = 1.0
+
+    configfile = search_configfile()
+    
+    if configfile:
+        xmldoc = None
+        xmlmapnik = None
+        
+        try:
+            xmldoc = minidom.parse(configfile)
+        except:
+            pass
+        
+        if xmldoc:
+            xmlmapnik_element = xmldoc.getElementsByTagName('hm-render-mapnik')
+            if xmlmapnik_element:
+                xmlmapnik = xmlmapnik_element[0]
+        
+        if xmlmapnik:
+            mapstyle = get_xml_subtag_value(xmlmapnik, 'mapstyle')
+            if mapstyle:
+                config['mapstyle'] = mapstyle
+            
+            hikingmapstyle = get_xml_subtag_value(xmlmapnik, 'hikingmapstyle')
+            if hikingmapstyle:
+                config['hikingmapstyle'] = hikingmapstyle
+            
+            output_format = get_xml_subtag_value(xmlmapnik, 'outputformat')
+            if output_format:
+                config['output_format'] = output_format
+            
+            dpi = get_xml_subtag_value(xmlmapnik, 'dpi')
+            if dpi:
+                config['dpi'] = int(dpi)
+            
+            scale_factor = get_xml_subtag_value(xmlmapnik, 'scalefactor')
+            if scale_factor:
+                config['scale_factor'] = float(scale_factor)
+            
+            xmlfontdirlist = xmlmapnik.getElementsByTagName('fontdirs')
+            
+            for xmlfontdir in xmlfontdirlist:
+                fontdir = get_xml_subtag_value(xmlfontdir, 'fontdir')
+                if fontdir:
+                    mapnik.FontEngine.register_fonts(fontdir, True)
+    
+    return config
+
+
 def parse_commandline():
+    config = parse_configfile()
+
     parser = argparse.ArgumentParser(description = "Render a map on paper using mapnik")
     parser.add_argument('--pagewidth', dest = 'pagewidth', type = float, default = 20.0, \
                         help = "page width in cm")
@@ -38,16 +110,16 @@ def parse_commandline():
                         help = "temp waypoints file to render")
     parser.add_argument('-v', dest = 'verbose', action = 'store_true')
     # hm-render-mapnik specific parameters
-    parser.add_argument('-d', '--dpi', type=int, default=300, \
+    parser.add_argument('-d', '--dpi', type=int, default=config['dpi'], \
                         help = "amount of detail to render in dots per inch (default: %(default)s)")
-    parser.add_argument('-S', '--scale-factor', type=float, default=1.0, \
+    parser.add_argument('-S', '--scale-factor', type=float, default=config['scale_factor'], \
                         help = "scale factor (default: %(default)s)")
-    parser.add_argument('-m', '--mapstyle', default='mapnik_style.xml', \
+    parser.add_argument('-m', '--mapstyle', default=config['mapstyle'], \
                         help = "mapnik stylesheet file (default: %(default)s)")
-    parser.add_argument('--hikingmapstyle', default='hikingmap_style.xml', \
+    parser.add_argument('--hikingmapstyle', default=config['hikingmapstyle'], \
                         help = "hikingmap stylesheet file, contains the CartoCSS for " + \
                                "the tracks and the waypoints (default: %(default)s)")
-    parser.add_argument('-f', '--format', dest='output_format', default='png', \
+    parser.add_argument('-f', '--format', dest='output_format', default=config['output_format'], \
                         help = "output format, consult the mapnik documentation for " + \
                                "possible values (default: %(default)s)")
     # --
@@ -100,35 +172,6 @@ def assure_bbox_mode(parameters):
         parameters.maxlon = parameters.lon + pagesize_lon / 2
         parameters.maxlat = parameters.lat + pagesize_lat / 2
 
-'''
-def __get_xml_subtag_value(self, xmlnode, sublabelname, defaultvalue):
-    elements = xmlnode.getElementsByTagName(sublabelname)
-    return str(elements[0].firstChild.nodeValue) \
-                  if elements and elements[0].childNodes \
-                  else defaultvalue
-
-
-def parse_configfile(self):
-    xmldoc = minidom.parse("render_mapnik.config.xml")
-    xmlmapnik = xmldoc.getElementsByTagName('render_mapnik')[0]
-    
-    self.mapstyle = self.__get_xml_subtag_value(xmlmapnik, 'mapstyle', 'mapnik_style.xml')
-    self.hikingmapstyle = self.__get_xml_subtag_value(xmlmapnik, 'hikingmapstyle', \
-                                                      'hikingmap_style.xml')
-    self.output_format = self.__get_xml_subtag_value(xmlmapnik, 'outputformat', 'pdf')
-    self.dpi = int(self.__get_xml_subtag_value(xmlmapnik, 'dpi', '300'))
-    self.scale_factor = float(self.__get_xml_subtag_value(xmlmapnik, 'scalefactor', '1.0'))
-    
-    xmlfontdirlist = xmlmapnik.getElementsByTagName('fontdirs')
-    
-    for xmlfontdir in xmlfontdirlist:
-        fontdir = self.__get_xml_subtag_value(xmlfontdir, 'fontdir', '')
-        if fontdir != '':
-            mapnik.FontEngine.register_fonts(fontdir, True)
-    
-    return True
-'''
-
 def render(parameters):
     if not parameters.verbose:
         mapnik.logger.set_severity(getattr(mapnik.severity_type, 'None'))
@@ -179,8 +222,6 @@ def render(parameters):
 def main():
     parameters = parse_commandline()
     assure_bbox_mode(parameters)
-
-    #parse_configfile(parameters)
     
     render(parameters)
 
