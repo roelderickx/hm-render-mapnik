@@ -3,7 +3,7 @@
     <mapstyle>mapnik_style.xml</mapstyle>
     <hikingmapstyle>hikingmap_style.xml</hikingmapstyle>
     <outputformat>png</outputformat>
-    <dpi>400</dpi>
+    <dpi>300</dpi>
     <scalefactor>1.0</scalefactor>
     <fontdirs>
         <fontdir>/usr/share/fonts/noto</fontdir>

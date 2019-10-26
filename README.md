@@ -88,5 +88,5 @@ To run this script you should have a working installation of [python 3](https://
 
 ## Configuration of the mapnik stylesheet
 
-The mapnik stylesheet should be configured before use and you need to set up a datasource as well. Consult the HTML documentation in this repository for a detailed explanation on how to achieve this.
+The mapnik stylesheet should be configured before use and you need to set up a datasource as well. Consult CONFIG.md in this repository for a detailed explanation on how to achieve this.
 
