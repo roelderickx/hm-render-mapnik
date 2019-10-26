@@ -56,14 +56,14 @@ The next step is importing OpenStreetMap data in the newly created database. The
 ```bash
 osm2pgsql -d gis -U gis -s data.osm.pbf --style openstreetmap-carto.style --tag-transform-script openstreetmap-carto.lua --hstore-all
 ```
-The files openstreetmap-carto.style and openstreetmap-carto.lua can be found in the OpenStreetMap CartoCSS package. It might be useful to specify the -C parameter to define the amount of cache memory and --number-processes to define the amount of threads used by osm2pgsql.
-Note that it is impossible to import map data which is overlapping with data already in the database. This happens not only when you import the same area twice, but also when areas with common borders are imported. To resolve this problem, drop the planet_osm_% tables from your gis database, concatenate all osm files you want to import using a tool called [Osmosis](https://github.com/openstreetmap/osmosis) and re-import the resulting file.
+The files openstreetmap-carto.style and openstreetmap-carto.lua can be found in the OpenStreetMap CartoCSS package. It might be useful to specify the -C parameter to define the amount of cache memory and --number-processes to define the amount of threads used by osm2pgsql.  
+Note that it is impossible to import map data which is overlapping with data already in the database. This happens not only when you import the same area twice, but also when areas with common borders are imported. To resolve this problem, drop the planet\_osm\_% tables from your gis database, concatenate all osm files you want to import using a tool called [Osmosis](https://github.com/openstreetmap/osmosis) and re-import the resulting file.
     
 ## Configuring the stylesheet
 
-The design of the map can be completely configured, allowing control over colors, fonts, icons and linestyles. This is achieved using a language called CartoCSS, somewhat similar in syntax to CSS but designed specifically to define maps. The syntax of this language is far beyond the scope of this document, but an introduction can be found [here](https://github.com/mapbox/carto/blob/master/docs/api/mapnik/3.0.6.rst).
-The easiest way to start is using the freely available OpenStreetMap stylesheet. After unzipping the archive you will find a file called INSTALL.md with detailed information on how to download the extra required shapefiles. You should also make sure all necessary fonts are installed.
-Mapnik requires the stylesheet to be one single XML file. Because lengthy files are rather cumbersome to edit, the stylesheet is developed in several smaller files, assembled together using CartoCSS.
+The design of the map can be completely configured, allowing control over colors, fonts, icons and linestyles. This is achieved using a language called CartoCSS, somewhat similar in syntax to CSS but designed specifically to define maps. The syntax of this language is far beyond the scope of this document, but an introduction can be found [here](https://github.com/mapbox/carto/blob/master/docs/api/mapnik/3.0.6.rst).  
+The easiest way to start is using the freely available OpenStreetMap stylesheet. After unzipping the archive you will find a file called INSTALL.md with detailed information on how to download the extra required shapefiles. You should also make sure all necessary fonts are installed.  
+Mapnik requires the stylesheet to be one single XML file. Because lengthy files are rather cumbersome to edit, the stylesheet is developed in several smaller files, assembled together using CartoCSS.  
 First of all you should specify how mapnik should connect to the database by specifying the user and password. To do so open the file project.mml and look for the osm2pgsql section, you should edit it to look like this:
 ```
   osm2pgsql: &osm2pgsql
@@ -75,7 +75,7 @@ First of all you should specify how mapnik should connect to the database by spe
   geometry_field: "way"
   extent: "-20037508,-20037508,20037508,20037508"
 ```
-Next you can generate the XML file:
+Next you can generate the XML file which you will need to run hm-render-mapnik:
 ```bash
 carto -a "3.0.0" project.mml > mapnik_style.xml
 ```
@@ -100,7 +100,7 @@ Make sure you obtain either HGT or GeoTIFF files or to convert them to either fo
 
 ### Importing elevation data in the database
 
-While it is possible to use the height files [without prior processing](https://wiki.openstreetmap.org/wiki/Contour_relief_maps_using_mapnik), it is highly recommended to import the data in the database. To do so you should copy import\_in\_db.sh to the directory where you saved the elevation files. Open the script and configure the parameters at the start. You can configure the file extension of the files to import, either hgt, tif or zip is valid. The database schema, user, password and table name can als be configured. Note that when modifying the table name you are required to modify the queries in the stylesheet below accordingly.
+While it is possible to use the height files [without prior processing](https://wiki.openstreetmap.org/wiki/Contour_relief_maps_using_mapnik), it is highly recommended to import the data in the database. To do so you should copy import\_in\_db.sh to the directory where you saved the elevation files. Open the script and configure the parameters at the start. You can configure the file extension of the files to import, either hgt, tif or zip is valid. The database schema, user, password and table name can als be configured. Note that when modifying the table name you are required to modify the queries in the stylesheet below accordingly.  
 Warning: the script will delete certain files to minimize disk space while processing. Keep in mind not to put other valuable files apart from the downloaded files and the import script in the same directory!
     
 ### Rendering elevation lines
