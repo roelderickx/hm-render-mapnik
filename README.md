@@ -90,3 +90,9 @@ To run this script you should have a working installation of [python 3](https://
 
 The mapnik stylesheet should be configured before use and you need to set up a datasource as well. Consult CONFIG.md in this repository for a detailed explanation on how to achieve this.
 
+## Roadmap
+
+* Copyright text on the bottom of each page, as requested by [OpenStreetMap](http://www.openstreetmap.org/copyright).
+* A new stylesheet allowing the map to be printed in black and white. There is nothing wrong with the OpenStreetMap stylesheet, but when printed the difference between for example water and forest is not clear. Text is not always readable and some information is irrelevant for hiking or cycling.
+* Hillshading. There is an experimental script to import elevation data as hillshading in the database but it is probably better to work with a geotiff file. The subject needs more studying first.
+

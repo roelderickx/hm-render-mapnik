@@ -93,7 +93,7 @@ First of all you should download elevation data, often called DEM (digital eleva
 * NASA's Shuttle Radar Topography Mission, version 3. This source covers the same area as version 2.1, but in a 1 arc-second resolution. You need to register first before having access to the [EarthExplorer](https://earthexplorer.usgs.gov/) and it is suggested to use the Bulk Download Application to download vast areas. For more information please consult [the help index](https://lta.cr.usgs.gov/EEHelp/ee_help).
 * However, version 3 of NASA's SRTM seems to contain large voids, a [void-filled version](https://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL1.003/2000.02.11/) is around as well. You need to register first and the user account is not the same as for the EarthExplorer.
 * [Viewfinder Panoramas](http://www.viewfinderpanoramas.org/dem3.html). This source offers global coverage in a 3-arc second resolution, it is the only option beyond 60 degrees north. There is a limited selection of areas in a 1 arc-second resolution as well.
-* Resolution does not always equals accuracy, data may have been interpolated from lower resolutions or inserted from other sources. For a limited selection of European countries there is a 1-arc second resolution available with a [higher accuracy]((https://data.opendataportal.at/dataset/dtm-europe)). The data is obtained using laserscan (LiDAR) in stead of satelites.
+* Resolution does not always equal accuracy, data may have been interpolated from lower resolutions or inserted from other sources. For a limited selection of European countries there is a 1-arc second resolution available with a [higher accuracy](https://data.opendataportal.at/dataset/dtm-europe). The data is obtained using laserscan (LiDAR) in stead of satelites.
 * Commercial elevation models, which may offer a higher resolution or more accurate data. Keep in mind that the data may be offered in a different projection, use the GDAL tools to reproject the data. Also note that each country has a different definition of sea level, your altitude lines may shift at the borders when importing several elevation models in the same database.
 
 Make sure you obtain either HGT or GeoTIFF files or to convert them to either format using GDAL.
@@ -196,12 +196,6 @@ Next look for a section landuse-overlay and add three new sections below:
     advanced: {}
 ```
 When all is in place you have to regenerate the XML style (see [above](#configuring-the-stylesheet)) before rendering maps with elevation lines.
-    
-## Roadmap
-
-* Inclusion of copyright text on the bottom of each page, as requested by [OpenStreetMap](http://www.openstreetmap.org/copyright).
-* A new stylesheet allowing the map to be printed in black and white. There is nothing wrong with the OpenStreetMap stylesheet, but when printed the difference between for example water and forest is not clear. Text is not always readable and some information is irrelevant for hiking or cycling.
-* Hillshading. There is an experimental script to import elevation data as hillshading in the database but the subject needs more studying first.
 
 ## License
 
