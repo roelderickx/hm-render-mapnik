@@ -8,7 +8,7 @@ with open('requirements.txt', 'r', encoding='utf-8') as f:
 
 setuptools.setup(
     name="hm-render-mapnik",
-    version="0.0.2",
+    version="0.0.3",
     license='GNU General Public License (GNU GPL v3 or above)',
     author="Roel Derickx",
     author_email="hikingmap.pypi@derickx.be",
