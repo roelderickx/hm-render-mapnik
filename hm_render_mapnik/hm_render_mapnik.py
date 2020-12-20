@@ -84,12 +84,14 @@ def parse_configfile():
             if scale_factor:
                 config['scale_factor'] = float(scale_factor)
             
-            xmlfontdirlist = xmlmapnik.getElementsByTagName('fontdirs')
-            
-            for xmlfontdir in xmlfontdirlist:
-                fontdir = get_xml_subtag_value(xmlfontdir, 'fontdir')
-                if fontdir:
-                    mapnik.FontEngine.register_fonts(fontdir, True)
+            xmlfontdirs = xmlmapnik.getElementsByTagName('fontdirs')
+            if xmlfontdirs:
+                xmlfontdirlist = xmlfontdirs[0].getElementsByTagName('fontdir')
+                for xmlfontdir in xmlfontdirlist:
+                    if xmlfontdir and xmlfontdir.childNodes:
+                        fontdir = str(xmlfontdir.firstChild.nodeValue)
+                        if fontdir:
+                            mapnik.FontEngine.register_fonts(fontdir, True)
     
     return config
 
