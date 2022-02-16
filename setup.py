@@ -3,9 +3,6 @@ import setuptools
 with open('README.md', 'r', encoding='utf-8') as fh:
     README = fh.read()
 
-with open('requirements.txt', 'r', encoding='utf-8') as f:
-    requirements = f.read().splitlines()
-
 setuptools.setup(
     name="hm-render-mapnik",
     version="0.0.3",
@@ -17,7 +14,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/roelderickx/hm-render-mapnik",
     packages=setuptools.find_packages(),
-    install_requires=requirements,
+    install_requires=['mapnik>=0.1'],
     python_requires='>=3.7',
     entry_points={
         'console_scripts': ['hm-render-mapnik = hm_render_mapnik.hm_render_mapnik:main']
