@@ -208,6 +208,27 @@ def render(parameters):
         overviewlayer = mapnik.Layer('OverviewLayer')
         overviewlayer.datasource = mapnik.Ogr(file = parameters.temptrackfile, layer = 'tracks')
         overviewlayer.styles.append('GPXStyle')
+        '''
+        # DEBUGGING START - each map in a different color
+        mapnik_style = mapnik.Style()
+        color_value = [ 255, 255, 255, 255, 255, 255, 255, 255,
+                        224, 192, 160, 128,  96,  64,  32,   0,
+                         32,  64,  96, 128, 160, 196, 224, 255 ]
+        for i in range(100):
+            r = color_value[i % 24]
+            g = color_value[(i+8) % 24]
+            b = color_value[(i+16) % 24]
+            line_symbolizer = mapnik.LineSymbolizer()
+            line_symbolizer.stroke = mapnik.Color('#%02x%02x%02x' % (r, g, b))
+            line_symbolizer.stroke_width = 1
+            mapnik_rule = mapnik.Rule()
+            mapnik_rule.filter = mapnik.Expression(("[name]='Page %d'" % i).encode('utf-8'))
+            mapnik_rule.symbols.append(line_symbolizer)
+            mapnik_style.rules.append(mapnik_rule)
+        m.append_style('OverviewGPXStyle', mapnik_style)
+        overviewlayer.styles.append('OverviewGPXStyle')
+        # DEBUGGING END
+        '''
         m.layers.append(overviewlayer)
     
     if parameters.tempwaypointfile:
